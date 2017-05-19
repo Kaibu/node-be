@@ -89,9 +89,9 @@ NodeBe.prototype.sendCommand = function (command) {
   let buffer = Buffer.alloc(command.length + 2)
   buffer[0] = 0x01
   buffer[1] = 0
-  command.forEach(function (cur, i) {
+  for (let i = 0; i < command.length; i++) {
     buffer[2 + i] = command.charCodeAt(i)
-  })
+  }
   let packet = this.buildPacket(buffer)
   setTimeout(this.timeout, 3000, this)
   this.send(packet)

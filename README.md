@@ -1,4 +1,5 @@
 [![npm](https://img.shields.io/npm/v/node-be.svg)]()[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+
 # About
 Battleye lib for Arma 2/3
 

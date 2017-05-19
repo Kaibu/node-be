@@ -18,10 +18,10 @@ function NodeBe (ip, port, password) {
   this.multipacket = undefined
 }
 
-//inherit eventemitter
+// inherit eventemitter
 util.inherits(NodeBe, require('events').EventEmitter)
 
-//login
+// login
 NodeBe.prototype.connect = function () {
   let self = this
   this.socket.parent = this
@@ -33,21 +33,24 @@ NodeBe.prototype.connect = function () {
     self.lastResponse = new Date().getTime()
     let buffer = Buffer.from(message)
 
-    if(message.length === 9) {
-      //keepalive packet
+    if (message.length === 9) {
+      // ignore keepalive packet
     }
 
     if (buffer[7] === 0x00) {
       if (buffer[8] === 0x01) {
+        // success
         self.loggedIn = true
         self.emit('listening')
       } else if (buffer[8] === 0x00) {
+        // login failes - wrong password
         self.emit('error', 'Login failed')
         self.close()
         self.loggedIn = false
         self.error = true
         self.close()
       } else {
+        // something weird happened
         self.emit('error', 'Unknown error')
         self.error = true
         self.close()
@@ -89,9 +92,9 @@ NodeBe.prototype.connect = function () {
   }, 25000, this)
 }
 
-//build command packet
+// build command packet
 NodeBe.prototype.sendCommand = function (command) {
-  if(this.loggedIn && !this.error) {
+  if (this.loggedIn && !this.error) {
     let buffer = Buffer.alloc(command.length + 2)
     buffer[0] = 0x01
     buffer[1] = 0
@@ -104,14 +107,14 @@ NodeBe.prototype.sendCommand = function (command) {
   }
 }
 
-//send prepared packet
+// send prepared packet
 NodeBe.prototype.send = function (data) {
   if (this.error) { return 1 }
   this.lastCommand = new Date().getTime()
   this.socket.send(data, 0, data.length, this.port, this.ip)
 }
 
-//build ack package
+// build ack package
 NodeBe.prototype.acknowledge = function (sequenceNumber) {
   let buffer = Buffer.alloc(2)
   buffer[0] = 0x02
@@ -120,7 +123,7 @@ NodeBe.prototype.acknowledge = function (sequenceNumber) {
   this.send(packet)
 }
 
-//build keepAlive packet
+// build keepAlive packet
 NodeBe.prototype.keepAlive = function () {
   if (!this.loggedIn) { return }
   let buffer = Buffer.alloc(2)
@@ -132,7 +135,7 @@ NodeBe.prototype.keepAlive = function () {
   this.send(packet)
 }
 
-//add nessesary headers
+// add nessesary headers
 NodeBe.prototype.buildPacket = function (command) {
   let buffer = Buffer.alloc(7 + command.length)
   buffer[0] = 0x42
@@ -152,7 +155,7 @@ NodeBe.prototype.buildPacket = function (command) {
   return buffer
 }
 
-//build login packet
+// build login packet
 NodeBe.prototype.buildLoginPacket = function () {
   let buffer = Buffer.alloc(this.password.length + 1)
   buffer[0] = 0x00
@@ -162,21 +165,21 @@ NodeBe.prototype.buildLoginPacket = function () {
   return this.buildPacket(buffer)
 }
 
-//send login packet
+// send login packet
 NodeBe.prototype.login = function () {
   let packet = this.buildLoginPacket()
   setTimeout(this.timeout, 3000, this)
   this.send(packet)
 }
 
-//timeout to check for server shutdown/connection loss
+// timeout to check for server shutdown/connection loss
 NodeBe.prototype.timeout = function (client) {
   if ((new Date().getTime() - client.lastResponse) >= 5000) {
     client.close()
   }
 }
 
-//strip BE header
+// strip BE header
 NodeBe.prototype.stripHeader = function (message) {
   let buffer = Buffer.alloc(message.length - 7)
   for (let i = 0; i < buffer.length; i++) {
@@ -185,7 +188,7 @@ NodeBe.prototype.stripHeader = function (message) {
   return buffer
 }
 
-//strip server message header
+// strip server message header
 NodeBe.prototype.stripHeaderServerMessage = function (message) {
   let buffer = Buffer.alloc(message.length - 9)
   buffer.forEach(function (cur, i) {
@@ -194,7 +197,7 @@ NodeBe.prototype.stripHeaderServerMessage = function (message) {
   return buffer
 }
 
-//strip multipacket header
+// strip multipacket header
 NodeBe.prototype.stripHeaderMultipacket = function (message) {
   let buffer = Buffer.alloc(message.length - 12)
   buffer.forEach(function (cur, i) {
@@ -203,7 +206,7 @@ NodeBe.prototype.stripHeaderMultipacket = function (message) {
   return buffer
 }
 
-//close socket and shutdown
+// close socket and shutdown
 NodeBe.prototype.close = function () {
   this.loggedIn = false
   clearInterval(this.interval)

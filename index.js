@@ -28,6 +28,7 @@ NodeBe.prototype.connect = function () {
     console.log('Socket error: ' + err)
   })
   this.socket.on('message', function (message, requestInfo) {
+
     this.parent.lastResponse = new Date().getTime()
     let buffer = Buffer.from(message)
 
@@ -75,8 +76,6 @@ NodeBe.prototype.connect = function () {
 
         this.parent.multipacket = undefined
       }
-    } else if (buffer[7] === 0x01) {
-      self.emit('message', this.parent.stripHeaderServerMessage(message).toString())
     }
   })
   this.login()

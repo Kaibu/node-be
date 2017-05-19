@@ -1,0 +1,35 @@
+{
+  "name": "node-be",
+  "version": "1.0.0",
+  "description": "nodejs battleye lib",
+  "main": "index.js",
+  "scripts": {
+    "test": "standard",
+    "example": "node example/example.js",
+    "example-custom": "node example/custom.js",
+    "standard-fix": "standard --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kaibu/node-be.git"
+  },
+  "keywords": [
+    "battleye",
+    "arma3",
+    "arma2",
+    "be",
+    "rcon"
+  ],
+  "author": "kaibu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Kaibu/node-be/issues"
+  },
+  "homepage": "https://github.com/Kaibu/node-be#readme",
+  "devDependencies": {
+    "standard": "*"
+  },
+  "dependencies": {
+    "buffer-crc32": "^0.2.13"
+  }
+}

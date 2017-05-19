@@ -34,7 +34,7 @@ NodeBe.prototype.connect = function () {
     let buffer = Buffer.from(message)
 
     if(message.length === 9) {
-      self.emit("debug", "keepAlive response")
+      //keepalive packet
     }
 
     if (buffer[7] === 0x00) {
@@ -128,8 +128,7 @@ NodeBe.prototype.keepAlive = function () {
   buffer[1] = 0
   buffer[2] = 0
   let packet = this.buildPacket(buffer)
-  setTimeout(this.timeout, 5000, this)
-  self.emit("debug", "keepAlive sent")
+  setTimeout(this.timeout, 3000, this)
   this.send(packet)
 }
 
@@ -166,7 +165,7 @@ NodeBe.prototype.buildLoginPacket = function () {
 //send login packet
 NodeBe.prototype.login = function () {
   let packet = this.buildLoginPacket()
-  setTimeout(this.timeout, 5000, this)
+  setTimeout(this.timeout, 3000, this)
   this.send(packet)
 }
 

@@ -23,7 +23,7 @@ util.inherits(NodeBe, require('events').EventEmitter)
 NodeBe.prototype.connect = function () {
   let self = this
   this.socket.parent = this
-  this.socket.bind(this.port)
+  this.socket.bind()
   this.socket.on('error', function (err) {
     console.log('Socket error: ' + err)
   })

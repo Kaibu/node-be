@@ -1,6 +1,6 @@
 {
   "name": "node-be",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "nodejs battleye lib",
   "main": "index.js",
   "scripts": {

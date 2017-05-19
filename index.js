@@ -116,7 +116,9 @@ NodeBe.prototype.keepAlive = function () {
   buffer[0] = 0x01
   buffer[1] = 0
   buffer[2] = 0
-  this.send(this.buildPacket(buffer))
+  let packet = this.buildPacket(buffer)
+  setTimeout(this.timeout, 3000, this)
+  this.send(packet)
 }
 
 NodeBe.prototype.buildPacket = function (command) {

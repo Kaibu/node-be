@@ -1,4 +1,4 @@
-[![npm](https://img.shields.io/npm/v/node-be.svg)]()[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![npm](https://img.shields.io/npm/v/node-be.svg)]() [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 # About
 Battleye lib for Arma 2/3
@@ -9,9 +9,9 @@ npm install node-be
 ```
 # Example
 ```js
-let NodeBe = require("node-be")
+const NodeBe = require("node-be")
 
-var battleEyeClient = new NodeBe("IP", 2306, "Password")
+let client = new NodeBe("IP", 2306, "Password")
 
 //Event: 'message'
 //RCon messages and command responses will be emited

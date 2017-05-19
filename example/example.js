@@ -14,4 +14,11 @@ client.on('close', function () {
   console.log('Connection closed.')
 })
 
+client.on('listening', function () {
+  console.log('Connected!')
+
+  client.sendCommand("players")
+  client.sendCommand("say -1 Hello World")
+})
+
 client.connect()

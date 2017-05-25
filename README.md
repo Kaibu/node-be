@@ -1,4 +1,4 @@
-[![npm](https://img.shields.io/npm/v/node-be.svg)]() [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![npm](https://img.shields.io/npm/v/node-be.svg)](https://www.npmjs.com/package/node-be) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 # About
 Battleye lib for Arma 2/3
@@ -14,15 +14,15 @@ const NodeBe = require("node-be")
 let client = new NodeBe("IP", 2306, "Password")
 
 //Event: 'message'
-//RCon messages and command responses will be emited
+//RCon messages and command responses will be emitted
 client.on('message', function (message) {
   console.log(message)
 })
 
 //Event: 'error'
-//Errors with connecting/login or socket error will be emitted
-client.on('error', function (error) {
-  console.log(error)
+//Errors while connecting/login or socket errors will be emitted
+client.on('err', function (err) {
+  console.log(err)
 })
 
 //Event: 'close'

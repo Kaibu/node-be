@@ -17,8 +17,8 @@ client.on('close', function () {
 client.on('listening', function () {
   console.log('Connected!')
 
-  client.sendCommand("players")
-  client.sendCommand("say -1 Hello World")
+  client.sendCommand('players')
+  client.sendCommand('say -1 Hello World')
 })
 
 client.connect()

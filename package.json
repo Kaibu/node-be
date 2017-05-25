@@ -1,13 +1,13 @@
 {
   "name": "node-be",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "Node Battleye lib for Arma 2/3",
   "main": "index.js",
   "scripts": {
-    "test": "standard",
     "example": "node example/example.js",
     "example-custom": "node example/custom.js",
-    "standard-fix": "standard --fix"
+    "lint": "standard",
+    "lint-fix": "standard --fix"
   },
   "repository": {
     "type": "git",

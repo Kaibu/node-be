@@ -97,7 +97,7 @@ NodeBe.prototype.sendCommand = function (command) {
   if (this.loggedIn && !this.error) {
     let buffer = Buffer.alloc(command.length + 2)
     buffer[0] = 0x01
-    buffer[1] = 0
+    buffer[1] = this.sequenceNumber
     for (let i = 0; i < command.length; i++) {
       buffer[2 + i] = command.charCodeAt(i)
     }

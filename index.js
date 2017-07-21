@@ -45,7 +45,6 @@ NodeBe.prototype.connect = function () {
       } else if (buffer[8] === 0x00) {
         // login failes - wrong password
         self.emit('error', 'Login failed')
-        self.close()
         self.loggedIn = false
         self.error = true
         self.close()
@@ -210,7 +209,6 @@ NodeBe.prototype.stripHeaderMultipacket = function (message) {
 NodeBe.prototype.close = function () {
   this.loggedIn = false
   clearInterval(this.interval)
-  this.socket.unref()
   this.socket.close()
   this.emit('close')
 }

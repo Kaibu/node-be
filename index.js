@@ -45,7 +45,6 @@ NodeBe.prototype.connect = function () {
       } else if (buffer[8] === 0x00) {
         // login failes - wrong password
         self.emit('error', 'Login failed')
-        self.close()
         self.loggedIn = false
         self.error = true
         self.close()
@@ -97,7 +96,7 @@ NodeBe.prototype.sendCommand = function (command) {
   if (this.loggedIn && !this.error) {
     let buffer = Buffer.alloc(command.length + 2)
     buffer[0] = 0x01
-    buffer[1] = 0
+    buffer[1] = this.sequenceNumber
     for (let i = 0; i < command.length; i++) {
       buffer[2 + i] = command.charCodeAt(i)
     }
@@ -210,7 +209,6 @@ NodeBe.prototype.stripHeaderMultipacket = function (message) {
 NodeBe.prototype.close = function () {
   this.loggedIn = false
   clearInterval(this.interval)
-  this.socket.unref()
   this.socket.close()
   this.emit('close')
 }

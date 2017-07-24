@@ -174,7 +174,11 @@ NodeBe.prototype.login = function () {
 // timeout to check for server shutdown/connection loss
 NodeBe.prototype.timeout = function (client) {
   if ((new Date().getTime() - client.lastResponse) >= 5000) {
-    client.close()
+    try {
+      client.close()
+    } catch (e) {
+      console.log(e)
+    }
   }
 }
 
@@ -209,6 +213,7 @@ NodeBe.prototype.stripHeaderMultipacket = function (message) {
 NodeBe.prototype.close = function () {
   this.loggedIn = false
   clearInterval(this.interval)
+  this.socket.unref()
   this.socket.close()
   this.emit('close')
 }

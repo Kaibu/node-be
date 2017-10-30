@@ -33,55 +33,58 @@ NodeBe.prototype.connect = function () {
     self.lastResponse = new Date().getTime()
     let buffer = Buffer.from(message)
 
-    if (message.length === 9) {
-      // ignore keepalive packet
-    }
+    if (buffer.toString('utf8', 0, 2) === 'BE') {
+      let payload = buffer.slice(6, buffer.length)
+      switch (payload[1].toString()) {
+        case '0':
+          //login-stuff
+          self.loggedIn = payload[2].toString()
 
-    if (buffer[7] === 0x00) {
-      if (buffer[8] === 0x01) {
-        // success
-        self.loggedIn = true
-        self.emit('listening')
-      } else if (buffer[8] === 0x00) {
-        // login failes - wrong password
-        self.emit('error', 'Login failed')
-        self.loggedIn = false
-        self.error = true
-        self.close()
-      } else {
-        // something weird happened
-        self.emit('error', 'Unknown error')
-        self.error = true
-        self.close()
-      }
-      return
-    }
+          if (self.loggedIn) {
+            self.emit('listening')
+          } else {
+            self.emit('error', 'Login failed')
+            self.loggedIn = false
+            self.error = true
+            self.close()
+          }
+          break
+        case '1':
+          //ack-package
+          if (payload.length === 3) return
 
-    // command response
-    if (buffer[7] === 0x02) {
-      self.acknowledge(buffer[8])
-      self.sequenceNumber = buffer[8]
-      self.emit('message', self.stripHeaderServerMessage(buffer).toString())
-    }
+          if (payload[3].toString() > 0) {
+            //message single packet
+            self.acknowledge(payload[2])
+            self.sequenceNumber = payload[2]
+            self.emit('message', self.stripHeaderServerMessage(buffer).toString())
+          } else {
+            //message multi-packet
+            if (payload[5] === 0) {
+              self.multipacket = new Array(payload[4])
+            }
 
-    // multipacket
-    if (buffer[7] === 0x01 && buffer[8] === 0 && buffer[9] === 0) {
-      if (buffer[11] === 0) {
-        self.multipacket = new Array(buffer[10])
-      }
+            if (self.multipacket && self.multipacket.length === payload[4]) {
+              self.multipacket[payload[5]] = self.stripHeaderMultipacket(buffer)
+            }
 
-      if (self.multipacket && self.multipacket.length === buffer[10]) {
-        self.multipacket[buffer[11]] = self.stripHeaderMultipacket(buffer)
-      }
+            if (payload[5] + 1 === payload[4]) {
+              let total = ''
+              for (let msg in self.multipacket) {
+                total += self.multipacket[msg].toString()
+              }
+              self.emit('message', total)
 
-      if (buffer[11] + 1 === buffer[10]) {
-        let total = ''
-        for (let msg in self.multipacket) {
-          total += self.multipacket[msg].toString()
-        }
-        self.emit('message', total)
-
-        self.multipacket = undefined
+              self.multipacket = undefined
+            }
+          }
+          break
+        case '2':
+          //message
+          self.acknowledge(payload[2])
+          self.sequenceNumber = payload[2]
+          self.emit('message', self.stripHeaderServerMessage(buffer).toString())
+          break
       }
     }
   })
